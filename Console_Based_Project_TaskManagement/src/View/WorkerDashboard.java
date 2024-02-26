@@ -18,7 +18,10 @@ public class WorkerDashboard extends Dashboard {
         System.out.println("2. View Pending Task");
         System.out.println("3. Update Pending Task");
         System.out.println("4. Send Message to Admin");
+        System.out.println("5. See All Messages");
         System.out.println("0. Exit");
+        System.out.println("-.-.".repeat(10)+"-");
+        System.out.println("Enter The Choice:");
         int choice = Integer.valueOf(scan.nextLine());
         run(choice);
         scan.close();
@@ -34,18 +37,26 @@ public class WorkerDashboard extends Dashboard {
         do {
             switch (choice) {
                 case 1:
+                	System.out.println("-.-.".repeat(10)+"-");
                     ArrayList<String> TaskList = Worker.viewAllProjects(ID);
                     System.out.println("Worked Projects");
                     Display(TaskList);
+                    System.out.println("-.-.".repeat(10)+"-");
                     break;
                 case 2:
+                	System.out.println("-.-.".repeat(10)+"-");
                     ArrayList<String> PendingTask = Worker.viewPendingTask(ID);
                     System.out.println("Pending Works");
+                    System.out.println("task_id"+" ".repeat(5)+"project_id"+" ".repeat(5)+"title"+" ".repeat(5)+"description");
                     Display(PendingTask);
+                    System.out.println("-.-.".repeat(10)+"-");
                     break;
                 case 3:
+                	System.out.println("-.-.".repeat(10)+"-");
                     PendingTask = Worker.viewPendingTask(ID);
+                    System.out.println("task_id"+" ".repeat(5)+"project_id"+" ".repeat(5)+"title"+" ".repeat(5)+"description");
                     Display(PendingTask);
+                    System.out.println("-.-.".repeat(10)+"-");
                     System.out.println("Enter The Task ID");
                     int Task_id = Integer.valueOf(scan.nextLine());
                     System.out.println("Enter The Status");
@@ -53,7 +64,7 @@ public class WorkerDashboard extends Dashboard {
                     System.out.println("2 => Done");
                     int op = Integer.valueOf(scan.nextLine());
                     String status = (op == 1) ? "in_progress" : "done";
-                    if (Worker.updatePendingTask(ID, Task_id, status)) {
+                    if (Worker.isTaskUpdateVaild(ID, Task_id, status)) {
                         System.out.println("Status Updated Successfully");
                     }
                     break;
@@ -62,13 +73,23 @@ public class WorkerDashboard extends Dashboard {
                     int Admin_id = Integer.valueOf(scan.nextLine());
                     System.out.println("Enter The Message");
                     String Message = scan.nextLine();
-                    if (Worker.sendMessageToAdmin(ID, Admin_id, Message)) {
+                    
+                    if (Worker.isMessage(ID, Admin_id, Message)) {
                         System.out.println("Message sended successfully!");
                     }
                     break;
+                case 5:
+                	System.out.println("-.-.".repeat(10)+"-");
+                	System.out.println("Messages!!");
+                	System.out.println();
+                	System.out.println("SenderName  Messages                    ReceicveAt");
+                	ArrayList<String> Messages = Worker.showMessages(ID);
+                	Display(Messages);
+                	System.out.println();
+                	break;
                 case 0:
                     System.out.println("Exiting...");
-                    break;
+                    System.exit(0);
                 default:
                     System.out.println("Invalid choice. Please enter a valid option.");
             }

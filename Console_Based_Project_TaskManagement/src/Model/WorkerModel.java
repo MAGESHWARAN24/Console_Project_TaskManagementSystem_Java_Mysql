@@ -3,9 +3,9 @@ package Model;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class WorkerModel {
+public class WorkerModel extends DB{
     static Connection getConnection() {
-        String jdbcUrl = "jdbc:mysql://localhost:3306/TaskManagementSystem";
+        String jdbcUrl = "jdbc:mysql://localhost:3306/TaskManagementSystemdb";
         String jdbcUsername = "root";
         String jdbcPassword = "Mypassword1234";
         try {
@@ -62,12 +62,12 @@ public class WorkerModel {
         return false;
     }
 
-    public static boolean Message(int ID, int admin_id, String message) {
+    public static boolean Message(int sender_Id, int receiver_id, String message) {
         String query = "INSERT INTO Messages(sender_id,receiver_id,message) VALUES(?,?,?)";
         try {
             PreparedStatement pstm = getConnection().prepareStatement(query);
-            pstm.setInt(1, ID);
-            pstm.setInt(2, admin_id);
+            pstm.setInt(1, sender_Id);
+            pstm.setInt(2, receiver_id);
             pstm.setString(3, message);
             int r = pstm.executeUpdate();
             return (r > 0);
@@ -76,4 +76,19 @@ public class WorkerModel {
         }
         return false;
     }
+
+	public static ArrayList<String> showMessages(int ID) {
+		String query = "SELECT S.name, M.message, M.sent_at FROM Messages M INNER JOIN Users R ON M.receiver_id = R.id INNER JOIN Users S ON S.id = M.sender_id WHERE M.sent_at < CURDATE() AND M.receiver_id = ?";
+		ArrayList<String> Messages = new ArrayList<>();
+		try {
+			PreparedStatement pstm = getConnection().prepareStatement(query);
+			pstm.setInt(1, ID);
+			 ResultSet r = pstm.executeQuery();
+	            while (r.next())
+	                Messages.add(r.getString(1) +" ".repeat(5)+ r.getString(2) +" ".repeat(5)+ r.getString(3));
+		}catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+		return Messages;
+	}
 }

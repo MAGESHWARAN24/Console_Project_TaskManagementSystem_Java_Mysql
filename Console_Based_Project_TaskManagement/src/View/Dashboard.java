@@ -124,6 +124,7 @@ public class Dashboard {
                 System.out.println("Enter the vaild Credentails");
                 signIn(d);
             }
+            scan.close();
         }
 
         static void signUp(Dashboard d) {
@@ -136,34 +137,35 @@ public class Dashboard {
             String userId = scan.nextLine();
             System.out.println("Password:");
             String password = scan.nextLine();
-
+            
             if (isSignUpValid(designation, userName, userId, password)) {
                 signUp(d);
             }
             d.setRole((designation.equalsIgnoreCase("A")) ? "admin" : "woker");
             d.setUserID(userId);
             d.setPassword(password);
-            DB.signUp(d);
+            DB.signUp(d,userName);
             signIn(d);
             scan.close();
         }
-
-        public static void main(String args[]) {
-            Scanner scan = new Scanner(System.in);
-            Dashboard D = new Dashboard("", "", "", 0);
-            System.out.println("SignIn = In / SignUp = Up / Exit = E");
+        static void Display() {
+        	Scanner scan = new Scanner(System.in);
+        	System.out.println("SignIn = In / SignUp = Up / Exit = E");
+        	Dashboard d = new Dashboard("", "", "", 0);
             String op = "";
             do {
                 op = scan.nextLine();
                 if (op.equalsIgnoreCase("In"))
-                    signIn(D);
+                    signIn(d);
                 else if (op.equalsIgnoreCase("Up"))
-                    signUp(D);
+                    signUp(d);
                 else
                     System.out.println("----------try again----------");
-            } while (!op.equals("E"));
-
+            } while (!op.equalsIgnoreCase("E"));
             scan.close();
+        }
+        public static void main(String args[]) {    
+            Display();
         }
     }
 }

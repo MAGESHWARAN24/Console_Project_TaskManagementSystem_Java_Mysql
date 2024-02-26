@@ -29,8 +29,7 @@ public class Admin {
         return AdminModel.addProject(ID, p_Title, p_Descripition);
     }
 
-    public static boolean addNewTask(int p_id, String p_Task_Title, String p_Task_Description, int p_Worker_id,
-            int adminID) {
+    public static boolean addNewTask(int p_id, String p_Task_Title, String p_Task_Description, int p_Worker_id,int adminID) {
         boolean result = AdminModel.addTask(p_id, p_Task_Title, p_Task_Description, p_Worker_id);
         if (result)
             Admin.messageToWorker(adminID, p_Worker_id, "Check your Task List and try to complete as soon as possible");
@@ -71,12 +70,16 @@ public class Admin {
                 || ("" + p_Worker_id).isEmpty()) {
             System.out.println("-----Some Fields are empty try again  ----");
             return false;
+        } 
+        if(!(""+p_id).matches("[0-9]+") || !(""+p_Worker_id).matches("[0-9]+")) {
+        	System.out.println("project_id,Worker_id fields must be a number");
+        	return false;
         }
         return Admin.addNewTask(p_id, p_Task_Title, p_Task_Description, p_Worker_id, ID);
     }
 
     public static boolean isProjectCompleted(int P_ID_To_Completed, int ID) {
-        if (!("" + P_ID_To_Completed).isEmpty()) {
+        if (("" + P_ID_To_Completed).isEmpty()) {
             System.out.println("-----Some Fields are empty try again  ----");
             return false;
         }
@@ -87,6 +90,10 @@ public class Admin {
         if (("" + task_ID).isEmpty() || ("" + oldWorker_ID).isEmpty() || ("" + newWorker_ID).isEmpty()) {
             System.out.println("-----Some Fields are empty try again  ----");
             return false;
+        }
+        if(!(""+task_ID).matches("[0-9]+") || !(""+oldWorker_ID).matches("[0-9]+") || !(""+newWorker_ID).matches("[0-9]+")) {
+        	System.out.println("task_ID,oldWorker_ID, newWorker_ID fields must be a number");
+        	return false;
         }
         boolean result = swapTask(task_ID, oldWorker_ID, newWorker_ID);
         if (result) {
@@ -104,13 +111,26 @@ public class Admin {
             System.out.println("-----Some Fields are empty try again  ----");
             return false;
         }
+        if(!(""+project_id).matches("[0-9]+") || !(""+worker_id).matches("[0-9]+")) {
+        	System.out.println("project_id,worker_id, newWorker_ID fields must be a number");
+        	return false;
+        }
         boolean result = Admin.addWorker(ID, project_id, worker_id, t_title, t_description);
         if (result) {
             Admin.messageToWorker(ID, worker_id,
-                    "You have addition task to this project->" + project_id + " Check your task list!!");
+                    "You have addition task to this project-> " + project_id + " Check your task list!!");
 
         }
         return result;
     }
+    
+    
+    
+	public static ArrayList<String> showMessages(int ID) {
+		ArrayList<String> Messages = AdminModel.showMessages(ID);
+		if(Messages.isEmpty())
+			Messages.add("No Messages at now");
+		return Messages;
+	}
 
 }

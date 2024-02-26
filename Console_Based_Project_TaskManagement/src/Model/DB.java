@@ -26,14 +26,14 @@ public class DB {
 	    }
 	    return null;
 	}
-
-	public static boolean signUp(Dashboard d) {		
-		String query = "INSERT INTO users(emailid,password,role) VALUES (?,?,?);";
+	public static boolean signUp(Dashboard d, String userName) {		
+		String query = "INSERT INTO users(name,emailid,password,role) VALUES (?,?,?,?);";
 		try {		
 			PreparedStatement pstm = getConnection().prepareStatement(query);
-			pstm.setString(1, d.getUserID());
-			pstm.setString(2, d.getPassword());		
-			pstm.setString(3, d.getRole());			
+			pstm.setString(1, userName);
+			pstm.setString(2, d.getUserID());
+			pstm.setString(3, d.getPassword());		
+			pstm.setString(4, d.getRole());			
 			int res = pstm.executeUpdate();
 			if(res > 0) {
 				System.out.println("<------------ SignUp Successfully Completed ------------>");
